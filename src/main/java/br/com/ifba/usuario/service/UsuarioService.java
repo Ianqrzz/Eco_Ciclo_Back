@@ -1,6 +1,7 @@
 package br.com.ifba.usuario.service;
 
 
+import br.com.ifba.infraestructure.exception.BusinessException;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.repository.UsuarioIRepository;
 import org.slf4j.Logger;
@@ -20,31 +21,46 @@ public class UsuarioService implements UsuarioIService{
 
     @Override
     public Usuario save(Usuario usuario) {
-        return null;
+        logger.info("iniciando o metodo save");
+        return usuarioIRepository.save(usuario);
     }
 
     @Override
     public Page<Usuario> findAll(Pageable pageable) {
-        return null;
+
+        return usuarioIRepository.findAll(pageable);
     }
 
     @Override
     public Usuario update(Long id, Usuario usuario) {
+
+        Usuario usuarioExistente = usuarioIRepository.findById(id).orElseThrow(() ->new BusinessException("Usuario não encontrado"));
+
+        usuarioExistente.setNome(usuario.getNome());
+        usuarioExistente.setEmail(usuario.getEmail());
+
+        usuarioIRepository.save(usuarioExistente);
+        logger.info("usuario atualizado com sucesso");
+
         return null;
     }
 
     @Override
     public void delete(Long id) {
 
+        usuarioIRepository.deleteById(id);
+        logger.info("usuario deletado com sucesso");
     }
 
     @Override
     public Usuario findById(Long id) {
-        return null;
+        return usuarioIRepository.findById(id).orElseThrow(() -> new BusinessException("Usuario não encontrado"));
     }
 
     @Override
     public Boolean autenticar(String senha) {
+
+
         return null;
     }
 
