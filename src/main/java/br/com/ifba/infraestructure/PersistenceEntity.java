@@ -16,8 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PersistenceEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include @ToString.Include
     @Getter
-    private UUID id;
+    private Long id;
 }
