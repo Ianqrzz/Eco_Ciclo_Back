@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 
 public interface UsuarioIService {
 
-    public Usuario save(Usuario usuario);
-    public Page<Usuario> findAll(Pageable pageable);
-    public Usuario update(Long id,Usuario usuario);
-    public void delete(Long id);
-    public Usuario findById(Long id);
-    public Boolean autenticar(String senha);
-    public void atualizarSenha(Long id, String senha);
+    Usuario save(Usuario usuario);
+    Page<Usuario> findAll(Pageable pageable);
+    Usuario update(Long id,Usuario usuario);
+    void delete(Long id);
+    Usuario findById(Long id);
+    Boolean autenticar(String email, String senha);
+    void atualizarSenha(Long id, String senha);
 }
