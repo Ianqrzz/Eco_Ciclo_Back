@@ -9,18 +9,30 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioService implements UsuarioIService{
+
+    //provavelmente vou ter que mudar o jeito que essa classe funciona por causa da herança de morador e etc.
 
     private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
 
     @Autowired
     private UsuarioIRepository usuarioIRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Usuario save(Usuario usuario) {
+
+        //criptografa a senha usando Hash unilateral
+        // quando for verificar se a senha é a mesma ele vai usar o mesmo metodo de criptografia e vê se da match
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenhaHash());
+        usuario.setSenhaHash(senhaCriptografada);
         logger.info("iniciando o metodo save");
         return usuarioIRepository.save(usuario);
     }
@@ -39,10 +51,10 @@ public class UsuarioService implements UsuarioIService{
         usuarioExistente.setNome(usuario.getNome());
         usuarioExistente.setEmail(usuario.getEmail());
 
-        usuarioIRepository.save(usuarioExistente);
+        Usuario usuarioAtualizado = usuarioIRepository.save(usuarioExistente);
         logger.info("usuario atualizado com sucesso");
 
-        return null;
+        return usuarioAtualizado;
     }
 
     @Override
@@ -60,6 +72,7 @@ public class UsuarioService implements UsuarioIService{
     @Override
     public Boolean autenticar(String senha) {
 
+        //luiz quando for fazer a parte do login usa esse metodo aqui
 
         return null;
     }

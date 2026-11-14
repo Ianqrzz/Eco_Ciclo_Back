@@ -17,5 +17,6 @@ public class Usuario extends PersistenceEntity {
     private String senhaHash;
     private int tentativasFalhas;
     private LocalDateTime bloqueadoAte;
+    private Perfil perfil;
 
 }
