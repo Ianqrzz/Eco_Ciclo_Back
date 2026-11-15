@@ -5,10 +5,15 @@ import br.com.ifba.solicitacao.dto.response.SolicitacaoColetaGetResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface SolicitacaoColetaIController {
 
     ResponseEntity<SolicitacaoColetaGetResponseDto> criarSolicitacao(SolicitacaoColetaPostRequestDto dto);
+
+    ResponseEntity<SolicitacaoColetaGetResponseDto> criarSolicitacaoComFoto(SolicitacaoColetaPostRequestDto dto, MultipartFile foto);
+
+    ResponseEntity<byte[]> buscarFoto(Long id);
 
     ResponseEntity<SolicitacaoColetaGetResponseDto> buscarPorId(Long id);
 

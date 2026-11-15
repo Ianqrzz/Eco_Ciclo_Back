@@ -3,6 +3,7 @@ package br.com.ifba.solicitacao.controller;
 import br.com.ifba.endereco.entity.Endereco;
 import br.com.ifba.infraestructure.exception.ApiExceptionHandler;
 import br.com.ifba.morador.entity.Morador;
+import br.com.ifba.solicitacao.entity.FotoSolicitacao;
 import br.com.ifba.solicitacao.entity.ItemColeta;
 import br.com.ifba.solicitacao.entity.SolicitacaoColeta;
 import br.com.ifba.solicitacao.entity.StatusSolicitacao;
@@ -17,9 +18,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -156,5 +159,53 @@ class SolicitacaoColetaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CANCELADA"))
                 .andExpect(jsonPath("$.motivoCancelamento").value("Não é mais necessário"));
+    }
+
+    @Test
+    @DisplayName("POST multipart (JSON + foto) deve criar solicitação com foto e retornar 201 Created")
+    void testCriarSolicitacaoComFoto() throws Exception {
+        String json = """
+                {
+                    "moradorId": 1,
+                    "enderecoColeta": { "cep": "44900000", "logradouro": "Rua das Flores", "numero": "10", "bairro": "Centro" },
+                    "itens": [ { "tipoResiduo": "RECICLAVEIS", "descricao": "Garrafas PET", "quantidade": 10 } ]
+                }
+                """;
+        byte[] jpeg = {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF, (byte) 0xE0};
+        MockMultipartFile parteJson = new MockMultipartFile("solicitacao", "", MediaType.APPLICATION_JSON_VALUE, json.getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile parteFoto = new MockMultipartFile("foto", "material.jpg", MediaType.IMAGE_JPEG_VALUE, jpeg);
+
+        when(solicitacaoColetaService.criarSolicitacao(any(SolicitacaoColeta.class), eq(1L), eq("image/jpeg"), eq(jpeg)))
+                .thenReturn(solicitacao);
+
+        mockMvc.perform(multipart("/api/v1/solicitacoes-coleta").file(parteJson).file(parteFoto))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.protocolo").value("CV-20261115-ABC999"))
+                .andExpect(jsonPath("$.status").value("PENDENTE"));
+    }
+
+    @Test
+    @DisplayName("POST multipart com item inválido deve retornar 400 Bad Request")
+    void testCriarSolicitacaoComFotoItemInvalido() throws Exception {
+        String json = """
+                { "moradorId": 1, "itens": [ { "tipoResiduo": "RECICLAVEIS", "descricao": "", "quantidade": 0 } ] }
+                """;
+        MockMultipartFile parteJson = new MockMultipartFile("solicitacao", "", MediaType.APPLICATION_JSON_VALUE, json.getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile parteFoto = new MockMultipartFile("foto", "material.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1});
+
+        mockMvc.perform(multipart("/api/v1/solicitacoes-coleta").file(parteJson).file(parteFoto))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/solicitacoes-coleta/{id}/foto deve devolver a imagem com o tipo correto")
+    void testBuscarFoto() throws Exception {
+        byte[] png = {(byte) 0x89, 'P', 'N', 'G'};
+        when(solicitacaoColetaService.buscarFoto(1L)).thenReturn(new FotoSolicitacao(solicitacao, "image/png", png));
+
+        mockMvc.perform(get("/api/v1/solicitacoes-coleta/1/foto"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.IMAGE_PNG))
+                .andExpect(content().bytes(png));
     }
 }
