@@ -2,6 +2,7 @@ package br.com.ifba.morador.entity;
 
 import br.com.ifba.endereco.entity.Endereco;
 import br.com.ifba.usuario.entity.Usuario;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.Setter;
 public class Morador extends Usuario {
 
     private String telefone;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Endereco endereco;
 
 }
