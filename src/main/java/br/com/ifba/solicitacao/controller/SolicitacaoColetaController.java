@@ -2,8 +2,9 @@ package br.com.ifba.solicitacao.controller;
 
 import br.com.ifba.endereco.entity.Endereco;
 import br.com.ifba.infraestructure.mapper.ObjectMapperUtil;
-import br.com.ifba.solicitacao.dto.SolicitacaoColetaGetResponseDto;
-import br.com.ifba.solicitacao.dto.SolicitacaoColetaPostRequestDto;
+import br.com.ifba.solicitacao.dto.request.ItemColetaPostRequestDto;
+import br.com.ifba.solicitacao.dto.request.SolicitacaoColetaPostRequestDto;
+import br.com.ifba.solicitacao.dto.response.SolicitacaoColetaGetResponseDto;
 import br.com.ifba.solicitacao.entity.ItemColeta;
 import br.com.ifba.solicitacao.entity.SolicitacaoColeta;
 import br.com.ifba.solicitacao.service.SolicitacaoColetaIService;

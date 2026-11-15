@@ -1,6 +1,7 @@
 package br.com.ifba.solicitacao.controller;
 
-import br.com.ifba.solicitacao.dto.*;
+import br.com.ifba.solicitacao.dto.request.*;
+import br.com.ifba.solicitacao.dto.response.*;
 import br.com.ifba.solicitacao.entity.SolicitacaoColeta;
 import br.com.ifba.solicitacao.service.PainelAdministrativoIService;
 import jakarta.validation.Valid;

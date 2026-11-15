@@ -1,7 +1,7 @@
 package br.com.ifba.solicitacao.service;
 
-import br.com.ifba.solicitacao.dto.PainelBacklogEstatisticasDto;
-import br.com.ifba.solicitacao.dto.SolicitacaoColetaFiltroDto;
+import br.com.ifba.solicitacao.dto.request.SolicitacaoColetaFiltroDto;
+import br.com.ifba.solicitacao.dto.response.PainelBacklogEstatisticasDto;
 import br.com.ifba.solicitacao.entity.SolicitacaoColeta;
 import br.com.ifba.solicitacao.entity.StatusSolicitacao;
 import org.springframework.data.domain.Page;

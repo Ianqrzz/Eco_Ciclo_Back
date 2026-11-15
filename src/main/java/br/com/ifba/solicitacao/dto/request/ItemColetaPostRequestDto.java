@@ -1,4 +1,4 @@
-package br.com.ifba.solicitacao.dto;
+package br.com.ifba.solicitacao.dto.request;
 
 import br.com.ifba.solicitacao.entity.TipoResiduo;
 import com.fasterxml.jackson.annotation.JsonProperty;

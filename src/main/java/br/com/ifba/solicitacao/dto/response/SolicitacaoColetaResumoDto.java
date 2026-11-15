@@ -1,4 +1,4 @@
-package br.com.ifba.solicitacao.dto;
+package br.com.ifba.solicitacao.dto.response;
 
 import br.com.ifba.solicitacao.entity.SolicitacaoColeta;
 import br.com.ifba.solicitacao.entity.StatusSolicitacao;

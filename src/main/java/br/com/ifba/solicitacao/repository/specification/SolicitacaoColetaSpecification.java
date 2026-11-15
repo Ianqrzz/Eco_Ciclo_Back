@@ -2,7 +2,7 @@ package br.com.ifba.solicitacao.repository.specification;
 
 import br.com.ifba.endereco.entity.Endereco;
 import br.com.ifba.morador.entity.Morador;
-import br.com.ifba.solicitacao.dto.SolicitacaoColetaFiltroDto;
+import br.com.ifba.solicitacao.dto.request.SolicitacaoColetaFiltroDto;
 import br.com.ifba.solicitacao.entity.ItemColeta;
 import br.com.ifba.solicitacao.entity.SolicitacaoColeta;
 import jakarta.persistence.criteria.*;

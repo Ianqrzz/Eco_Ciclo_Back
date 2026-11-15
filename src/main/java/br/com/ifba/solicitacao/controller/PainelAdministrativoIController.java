@@ -1,6 +1,7 @@
 package br.com.ifba.solicitacao.controller;
 
-import br.com.ifba.solicitacao.dto.*;
+import br.com.ifba.solicitacao.dto.request.*;
+import br.com.ifba.solicitacao.dto.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

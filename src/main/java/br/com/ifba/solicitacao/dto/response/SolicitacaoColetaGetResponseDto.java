@@ -1,4 +1,4 @@
-package br.com.ifba.solicitacao.dto;
+package br.com.ifba.solicitacao.dto.response;
 
 import br.com.ifba.endereco.dto.EnderecoGetResponseDto;
 import br.com.ifba.infraestructure.mapper.ObjectMapperUtil;

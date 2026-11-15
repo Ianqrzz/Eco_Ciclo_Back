@@ -1,7 +1,7 @@
 package br.com.ifba.solicitacao.controller;
 
-import br.com.ifba.solicitacao.dto.SolicitacaoColetaGetResponseDto;
-import br.com.ifba.solicitacao.dto.SolicitacaoColetaPostRequestDto;
+import br.com.ifba.solicitacao.dto.request.SolicitacaoColetaPostRequestDto;
+import br.com.ifba.solicitacao.dto.response.SolicitacaoColetaGetResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

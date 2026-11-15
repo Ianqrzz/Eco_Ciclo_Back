@@ -1,4 +1,4 @@
-package br.com.ifba.solicitacao.dto;
+package br.com.ifba.solicitacao.dto.request;
 
 import br.com.ifba.solicitacao.entity.StatusSolicitacao;
 import com.fasterxml.jackson.annotation.JsonProperty;
