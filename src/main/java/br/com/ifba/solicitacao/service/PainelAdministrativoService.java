@@ -46,6 +46,55 @@ public class PainelAdministrativoService implements PainelAdministrativoIService
 
     @Override
     @Transactional
+    public SolicitacaoColeta aceitarSolicitacao(Long id, String observacoesEquipe) {
+        logger.info("Equipe municipal aceitando solicitação ID {}", id);
+        SolicitacaoColeta solicitacao = obterDetalhes(id);
+
+        if (solicitacao.getStatus().isTerminal()) {
+            throw new BusinessException(String.format(
+                    "Não é possível aceitar uma solicitação que já foi finalizada como %s.",
+                    solicitacao.getStatus().getDescricao()
+            ));
+        }
+
+        solicitacao.setStatus(StatusSolicitacao.ACEITA);
+        if (observacoesEquipe != null && !observacoesEquipe.trim().isBlank()) {
+            solicitacao.setObservacoesEquipe(observacoesEquipe.trim());
+        }
+
+        SolicitacaoColeta salva = solicitacaoColetaRepository.save(solicitacao);
+        logger.info("Solicitação protocolo {} aceita com sucesso pela equipe municipal", salva.getProtocolo());
+        return salva;
+    }
+
+    @Override
+    @Transactional
+    public SolicitacaoColeta rejeitarSolicitacao(Long id, String motivoRejeicao) {
+        logger.info("Equipe municipal rejeitando solicitação ID {}", id);
+
+        if (motivoRejeicao == null || motivoRejeicao.trim().isBlank()) {
+            throw new BusinessException("Para rejeitar a solicitação, é obrigatório informar o motivo da rejeição.");
+        }
+
+        SolicitacaoColeta solicitacao = obterDetalhes(id);
+
+        if (solicitacao.getStatus().isTerminal()) {
+            throw new BusinessException(String.format(
+                    "Não é possível rejeitar uma solicitação que já foi finalizada como %s.",
+                    solicitacao.getStatus().getDescricao()
+            ));
+        }
+
+        solicitacao.setStatus(StatusSolicitacao.REJEITADA);
+        solicitacao.setMotivoRejeicao(motivoRejeicao.trim());
+
+        SolicitacaoColeta salva = solicitacaoColetaRepository.save(solicitacao);
+        logger.info("Solicitação protocolo {} rejeitada pela equipe municipal. Motivo: {}", salva.getProtocolo(), motivoRejeicao);
+        return salva;
+    }
+
+    @Override
+    @Transactional
     public SolicitacaoColeta atualizarStatus(Long id, StatusSolicitacao novoStatus, String observacoesEquipe, String motivoCancelamento) {
         logger.info("Atualizando status da solicitação ID {} para {}", id, novoStatus);
 
@@ -150,10 +199,12 @@ public class PainelAdministrativoService implements PainelAdministrativoIService
         long total = solicitacaoColetaRepository.count();
         long pendentes = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.PENDENTE);
         long emAnalise = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.EM_ANALISE);
+        long aceitas = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.ACEITA);
         long agendadas = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.AGENDADA);
         long emAndamento = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.EM_ANDAMENTO);
         long concluidas = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.CONCLUIDA);
         long canceladas = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.CANCELADA);
+        long rejeitadas = solicitacaoColetaRepository.countByStatus(StatusSolicitacao.REJEITADA);
 
         // Agrupamento por tipo de resíduo
         Map<TipoResiduo, Long> porTipoResiduo = new EnumMap<>(TipoResiduo.class);
@@ -180,10 +231,12 @@ public class PainelAdministrativoService implements PainelAdministrativoIService
                 .totalSolicitacoes(total)
                 .totalPendentes(pendentes)
                 .totalEmAnalise(emAnalise)
+                .totalAceitas(aceitas)
                 .totalAgendadas(agendadas)
                 .totalEmAndamento(emAndamento)
                 .totalConcluidas(concluidas)
                 .totalCanceladas(canceladas)
+                .totalRejeitadas(rejeitadas)
                 .porTipoResiduo(porTipoResiduo)
                 .porBairro(porBairro)
                 .build();

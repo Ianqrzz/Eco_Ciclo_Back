@@ -24,6 +24,9 @@ public class PainelBacklogEstatisticasDto {
     @JsonProperty("totalEmAnalise")
     private long totalEmAnalise;
 
+    @JsonProperty("totalAceitas")
+    private long totalAceitas;
+
     @JsonProperty("totalAgendadas")
     private long totalAgendadas;
 
@@ -35,6 +38,9 @@ public class PainelBacklogEstatisticasDto {
 
     @JsonProperty("totalCanceladas")
     private long totalCanceladas;
+
+    @JsonProperty("totalRejeitadas")
+    private long totalRejeitadas;
 
     @JsonProperty("porTipoResiduo")
     private Map<TipoResiduo, Long> porTipoResiduo;

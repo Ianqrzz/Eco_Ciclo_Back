@@ -59,6 +59,9 @@ public class SolicitacaoColeta extends PersistenceEntity {
     @Column(name = "motivo_cancelamento", length = 500)
     private String motivoCancelamento;
 
+    @Column(name = "motivo_rejeicao", length = 500)
+    private String motivoRejeicao;
+
     @Column(name = "responsavel_equipe", length = 150)
     private String responsavelEquipe;
 

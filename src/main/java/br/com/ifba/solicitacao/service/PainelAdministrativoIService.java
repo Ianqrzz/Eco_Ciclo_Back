@@ -24,6 +24,16 @@ public interface PainelAdministrativoIService {
     SolicitacaoColeta obterDetalhes(Long id);
 
     /**
+     * Aceita a solicitação de coleta pela equipe municipal, aprovando-a para o fluxo de atendimento.
+     */
+    SolicitacaoColeta aceitarSolicitacao(Long id, String observacoesEquipe);
+
+    /**
+     * Rejeita a solicitação de coleta pela equipe municipal com justificativa obrigatória.
+     */
+    SolicitacaoColeta rejeitarSolicitacao(Long id, String motivoRejeicao);
+
+    /**
      * Atualiza o status da solicitação acompanhando o atendimento da equipe municipal.
      */
     SolicitacaoColeta atualizarStatus(Long id, StatusSolicitacao novoStatus, String observacoesEquipe, String motivoCancelamento);

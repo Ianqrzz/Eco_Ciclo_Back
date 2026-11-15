@@ -231,15 +231,60 @@ class PainelAdministrativoServiceTest {
     }
 
     @Test
+    @DisplayName("Deve permitir à Equipe Municipal aceitar solicitação (RF04)")
+    void testAceitarSolicitacaoComSucesso() {
+        when(solicitacaoColetaRepository.findById(10L)).thenReturn(Optional.of(solicitacao));
+        when(solicitacaoColetaRepository.save(any(SolicitacaoColeta.class))).thenAnswer(i -> i.getArgument(0));
+
+        SolicitacaoColeta aceita = painelAdministrativoService.aceitarSolicitacao(10L, "Coleta aprovada para próxima semana");
+
+        assertEquals(StatusSolicitacao.ACEITA, aceita.getStatus());
+        assertEquals("Coleta aprovada para próxima semana", aceita.getObservacoesEquipe());
+    }
+
+    @Test
+    @DisplayName("Deve impedir aceitar solicitação já finalizada")
+    void testAceitarSolicitacaoJaTerminalLancaExcecao() {
+        solicitacao.setStatus(StatusSolicitacao.CONCLUIDA);
+        when(solicitacaoColetaRepository.findById(10L)).thenReturn(Optional.of(solicitacao));
+
+        assertThrows(BusinessException.class, () ->
+                painelAdministrativoService.aceitarSolicitacao(10L, null)
+        );
+    }
+
+    @Test
+    @DisplayName("Deve permitir à Equipe Municipal rejeitar solicitação informando motivo (RF04)")
+    void testRejeitarSolicitacaoComSucesso() {
+        when(solicitacaoColetaRepository.findById(10L)).thenReturn(Optional.of(solicitacao));
+        when(solicitacaoColetaRepository.save(any(SolicitacaoColeta.class))).thenAnswer(i -> i.getArgument(0));
+
+        SolicitacaoColeta rejeitada = painelAdministrativoService.rejeitarSolicitacao(10L, "Material não enquadrado nas regras municipais");
+
+        assertEquals(StatusSolicitacao.REJEITADA, rejeitada.getStatus());
+        assertEquals("Material não enquadrado nas regras municipais", rejeitada.getMotivoRejeicao());
+    }
+
+    @Test
+    @DisplayName("Deve lançar BusinessException ao rejeitar solicitação sem motivo")
+    void testRejeitarSolicitacaoSemMotivoLancaExcecao() {
+        assertThrows(BusinessException.class, () ->
+                painelAdministrativoService.rejeitarSolicitacao(10L, "   ")
+        );
+    }
+
+    @Test
     @DisplayName("Deve calcular estatísticas do backlog centralizado com métricas completas")
     void testObterEstatisticasBacklog() {
         when(solicitacaoColetaRepository.count()).thenReturn(20L);
         when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.PENDENTE)).thenReturn(5L);
         when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.EM_ANALISE)).thenReturn(3L);
+        when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.ACEITA)).thenReturn(2L);
         when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.AGENDADA)).thenReturn(4L);
         when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.EM_ANDAMENTO)).thenReturn(2L);
         when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.CONCLUIDA)).thenReturn(5L);
         when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.CANCELADA)).thenReturn(1L);
+        when(solicitacaoColetaRepository.countByStatus(StatusSolicitacao.REJEITADA)).thenReturn(1L);
 
         List<Object[]> porResiduo = new ArrayList<>();
         porResiduo.add(new Object[]{TipoResiduo.MOVEIS, 8L});
@@ -256,8 +301,10 @@ class PainelAdministrativoServiceTest {
         assertNotNull(stats);
         assertEquals(20L, stats.getTotalSolicitacoes());
         assertEquals(5L, stats.getTotalPendentes());
+        assertEquals(2L, stats.getTotalAceitas());
         assertEquals(4L, stats.getTotalAgendadas());
         assertEquals(5L, stats.getTotalConcluidas());
+        assertEquals(1L, stats.getTotalRejeitadas());
         assertEquals(8L, stats.getPorTipoResiduo().get(TipoResiduo.MOVEIS));
         assertEquals(4L, stats.getPorTipoResiduo().get(TipoResiduo.ENTULHO_REFORMA));
         assertEquals(7L, stats.getPorBairro().get("Pituba"));

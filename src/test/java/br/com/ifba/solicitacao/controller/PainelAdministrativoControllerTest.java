@@ -116,6 +116,54 @@ class PainelAdministrativoControllerTest {
     }
 
     @Test
+    @DisplayName("PATCH /api/v1/painel-prefeitura/solicitacoes/{id}/aceitar deve aceitar solicitação pela equipe municipal")
+    void testAceitarSolicitacao() throws Exception {
+        String jsonPayload = """
+                {
+                    "observacoesEquipe": "Aprovado para agendamento"
+                }
+                """;
+
+        solicitacao.setStatus(StatusSolicitacao.ACEITA);
+        solicitacao.setObservacoesEquipe("Aprovado para agendamento");
+
+        when(painelAdministrativoService.aceitarSolicitacao(eq(10L), eq("Aprovado para agendamento")))
+                .thenReturn(solicitacao);
+
+        mockMvc.perform(patch("/api/v1/painel-prefeitura/solicitacoes/10/aceitar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(10))
+                .andExpect(jsonPath("$.status").value("ACEITA"))
+                .andExpect(jsonPath("$.observacoesEquipe").value("Aprovado para agendamento"));
+    }
+
+    @Test
+    @DisplayName("PATCH /api/v1/painel-prefeitura/solicitacoes/{id}/rejeitar deve rejeitar solicitação com motivo obrigatório")
+    void testRejeitarSolicitacao() throws Exception {
+        String jsonPayload = """
+                {
+                    "motivoRejeicao": "Material tóxico não recolhido pela coleta verde"
+                }
+                """;
+
+        solicitacao.setStatus(StatusSolicitacao.REJEITADA);
+        solicitacao.setMotivoRejeicao("Material tóxico não recolhido pela coleta verde");
+
+        when(painelAdministrativoService.rejeitarSolicitacao(eq(10L), eq("Material tóxico não recolhido pela coleta verde")))
+                .thenReturn(solicitacao);
+
+        mockMvc.perform(patch("/api/v1/painel-prefeitura/solicitacoes/10/rejeitar")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(10))
+                .andExpect(jsonPath("$.status").value("REJEITADA"))
+                .andExpect(jsonPath("$.motivoRejeicao").value("Material tóxico não recolhido pela coleta verde"));
+    }
+
+    @Test
     @DisplayName("PATCH /api/v1/painel-prefeitura/solicitacoes/{id}/status deve atualizar status com sucesso")
     void testAtualizarStatus() throws Exception {
         String jsonPayload = """

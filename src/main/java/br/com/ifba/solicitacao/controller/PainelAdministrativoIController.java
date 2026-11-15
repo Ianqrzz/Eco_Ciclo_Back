@@ -14,6 +14,10 @@ public interface PainelAdministrativoIController {
 
     ResponseEntity<SolicitacaoColetaGetResponseDto> obterDetalhes(Long id);
 
+    ResponseEntity<SolicitacaoColetaGetResponseDto> aceitarSolicitacao(Long id, SolicitacaoColetaAceitarDto dto);
+
+    ResponseEntity<SolicitacaoColetaGetResponseDto> rejeitarSolicitacao(Long id, SolicitacaoColetaRejeitarDto dto);
+
     ResponseEntity<SolicitacaoColetaGetResponseDto> atualizarStatus(Long id, SolicitacaoColetaAtualizarStatusDto dto);
 
     ResponseEntity<SolicitacaoColetaGetResponseDto> agendarColeta(Long id, SolicitacaoColetaAgendamentoDto dto);

@@ -42,6 +42,27 @@ public class PainelAdministrativoController implements PainelAdministrativoICont
     }
 
     @Override
+    @PatchMapping(path = "/solicitacoes/{id}/aceitar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SolicitacaoColetaGetResponseDto> aceitarSolicitacao(
+            @PathVariable Long id,
+            @RequestBody(required = false) SolicitacaoColetaAceitarDto dto) {
+
+        String observacoes = dto != null ? dto.getObservacoesEquipe() : null;
+        SolicitacaoColeta solicitacao = painelAdministrativoService.aceitarSolicitacao(id, observacoes);
+        return ResponseEntity.ok(SolicitacaoColetaGetResponseDto.fromEntity(solicitacao));
+    }
+
+    @Override
+    @PatchMapping(path = "/solicitacoes/{id}/rejeitar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SolicitacaoColetaGetResponseDto> rejeitarSolicitacao(
+            @PathVariable Long id,
+            @RequestBody @Valid SolicitacaoColetaRejeitarDto dto) {
+
+        SolicitacaoColeta solicitacao = painelAdministrativoService.rejeitarSolicitacao(id, dto.getMotivoRejeicao());
+        return ResponseEntity.ok(SolicitacaoColetaGetResponseDto.fromEntity(solicitacao));
+    }
+
+    @Override
     @PatchMapping(path = "/solicitacoes/{id}/status", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SolicitacaoColetaGetResponseDto> atualizarStatus(
             @PathVariable Long id,

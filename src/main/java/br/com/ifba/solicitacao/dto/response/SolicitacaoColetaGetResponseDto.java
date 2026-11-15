@@ -65,6 +65,9 @@ public class SolicitacaoColetaGetResponseDto {
     @JsonProperty("motivoCancelamento")
     private String motivoCancelamento;
 
+    @JsonProperty("motivoRejeicao")
+    private String motivoRejeicao;
+
     @JsonProperty("responsavelEquipe")
     private String responsavelEquipe;
 
@@ -103,6 +106,7 @@ public class SolicitacaoColetaGetResponseDto {
                 .observacoesMorador(solicitacao.getObservacoesMorador())
                 .observacoesEquipe(solicitacao.getObservacoesEquipe())
                 .motivoCancelamento(solicitacao.getMotivoCancelamento())
+                .motivoRejeicao(solicitacao.getMotivoRejeicao())
                 .responsavelEquipe(solicitacao.getResponsavelEquipe())
                 .build();
     }
