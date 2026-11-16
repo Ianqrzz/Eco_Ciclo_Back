@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/morador")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class MoradorController {
 
     private final MoradorIService moradorIService;
