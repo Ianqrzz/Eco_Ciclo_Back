@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/usuario")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class UsuarioController implements UsuarioIController {
 
     private final UsuarioIService usuarioIService;
