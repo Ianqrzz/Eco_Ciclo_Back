@@ -46,8 +46,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(FieldError::getField)
                 .collect(Collectors.joining(", "));
 
+        // Falha de conversão (ex.: texto num campo enum) traz mensagem técnica; troca por uma legível
         String fieldsMessage = fieldErrors.stream()
-                .map(FieldError::getDefaultMessage)
+                .map(erro -> erro.isBindingFailure()
+                        ? "Valor inválido para o campo " + erro.getField()
+                        : erro.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
         ValidationExceptionDetails details = ValidationExceptionDetails.builder()

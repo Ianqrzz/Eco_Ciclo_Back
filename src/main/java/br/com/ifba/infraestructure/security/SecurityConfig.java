@@ -30,6 +30,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Enquanto a autenticacao por token nao for implementada, as rotas ficam abertas.
+     * Sem esta configuracao o Spring Security exige HTTP Basic com senha gerada em todas as rotas.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

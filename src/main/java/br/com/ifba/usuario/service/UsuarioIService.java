@@ -11,6 +11,6 @@ public interface UsuarioIService {
     Usuario update(Long id,Usuario usuario);
     void delete(Long id);
     Usuario findById(Long id);
-    Boolean autenticar(String email, String senha);
+    Usuario autenticar(String email, String senha);
     void atualizarSenha(Long id, String senha);
 }

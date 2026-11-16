@@ -4,6 +4,7 @@ import br.com.ifba.infraestructure.mapper.ObjectMapperUtil;
 import br.com.ifba.usuario.dto.UsuarioAtualizarSenhaDto;
 import br.com.ifba.usuario.dto.UsuarioGetResponseDto;
 import br.com.ifba.usuario.dto.UsuarioLoginRequestDto;
+import br.com.ifba.usuario.dto.UsuarioLoginResponseDto;
 import br.com.ifba.usuario.dto.UsuarioPostRequestDto;
 import br.com.ifba.usuario.dto.UsuarioPutRequestDto;
 import br.com.ifba.usuario.entity.Usuario;
@@ -78,9 +79,10 @@ public class UsuarioController implements UsuarioIController {
 
     @Override
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(@RequestBody @Valid UsuarioLoginRequestDto loginRequest) {
-        usuarioIService.autenticar(loginRequest.getEmail(), loginRequest.getSenha());
-        return ResponseEntity.ok("Login realizado com sucesso.");
+    public ResponseEntity<UsuarioLoginResponseDto> login(@RequestBody @Valid UsuarioLoginRequestDto loginRequest) {
+        Usuario usuario = usuarioIService.autenticar(loginRequest.getEmail(), loginRequest.getSenha());
+        return ResponseEntity.ok(new UsuarioLoginResponseDto(
+                usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getPerfil()));
     }
 
     @Override

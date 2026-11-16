@@ -77,7 +77,7 @@ public class UsuarioService implements UsuarioIService{
 
     @Override
     @Transactional(noRollbackFor = BusinessException.class)
-    public Boolean autenticar(String email, String senha) {
+    public Usuario autenticar(String email, String senha) {
         Usuario usuario = usuarioIRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException("E-mail ou senha inválidos."));
 
@@ -103,12 +103,13 @@ public class UsuarioService implements UsuarioIService{
             usuarioIRepository.save(usuario);
 
             logger.info("Login realizado com sucesso para: {}", email);
-            return true;
+            return usuario;
         }
 
 
+        // registrarTentativaFalha sempre lanca BusinessException
         registrarTentativaFalha(usuario, agora);
-        return false;
+        return null;
     }
 
     private void registrarTentativaFalha(Usuario usuario, LocalDateTime agora) {
